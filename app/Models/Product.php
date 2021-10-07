@@ -9,11 +9,16 @@ class Product extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded  = [];
     protected $fillable = [
-
+        'name',
+        'qty',
+        'image',
+        'price',
+        'description',
         'created_by'
     ];
+
     /**
      * The "boot" method of the model.
      *

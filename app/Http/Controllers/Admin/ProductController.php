@@ -1,11 +1,14 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Admin;
 
+use App\Http\Controllers\Controller;
 use App\Helpers\Helper;
+use App\Http\Requests\Admin\ProductRequest;
 use App\Http\Resources\Admin\ProductResource;
 use App\Models\Product;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
@@ -30,12 +33,16 @@ class ProductController extends Controller
      * @param \Illuminate\Http\Request $request
      * @return \Illuminate\Http\JsonResponse
      */
-    public function store(Request $request)
+    public function store(ProductRequest $request)
     {
-        $obj = new Product();
-        $obj->fill($request->all());
-        $obj->save();
-        return Helper::returnResponse("success", "Created successfully", $obj);
+        $product = new Product();
+        if (!empty($request->image)) {
+            $product->image = Helper::fileUpload($request->image);
+        }
+        $request->offsetUnset('image');
+        $product->fill($request->all());
+        $product->save();
+        return Helper::returnResponse("success", "Product Created successfully", $product);
     }
 
     /**
@@ -58,6 +65,13 @@ class ProductController extends Controller
      */
     public function update(Request $request, Product $product)
     {
+        if ($request->filled('image')) {
+            if (Storage::disk('public')->exists('products/' . $product->image)) {
+                Storage::disk('public')->delete('products/' . $product->image);
+            }
+            $product->image = Helper::fileUpload($request->image);
+        }
+        $request->offsetUnset('image');
         $product->fill($request->all());
         $product->update();
         return Helper::returnResponse("success", "Updated successfully", $product);
@@ -71,6 +85,9 @@ class ProductController extends Controller
      */
     public function destroy(Product $product)
     {
+        if (Storage::disk('public')->exists('products/' . $product->image)) {
+            Storage::disk('public')->delete('products/' . $product->image);
+        }
         $product->delete();
         return Helper::returnResponse("success", "Deleted successfully");
     }
