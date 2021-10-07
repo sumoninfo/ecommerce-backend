@@ -11,4 +11,7 @@ Route::post('admin/login', [AuthController::class, 'login']);
 Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin-api', 'scopes:admin']], function () {
     Route::get('/auth', [AuthController::class, 'getAuthData']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+//    Route::apiResource('/products', )
+
 });
