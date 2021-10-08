@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ProductController;
+use App\Http\Controllers\Admin\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
 
@@ -15,4 +16,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin-api', 'scopes:ad
 
     Route::apiResources(['products' => ProductController::class]);
     Route::apiResources(['customers' => CustomerController::class]);
+    //admin profile
+    Route::get('/profile/{admin}', [ProfileController::class, 'show']);
+    Route::put('/profile/{admin}', [ProfileController::class, 'update']);
 });
