@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\CustomerController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -13,6 +14,8 @@ Route::post('admin/login', [AuthController::class, 'login']);
 Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin-api', 'scopes:admin']], function () {
     Route::get('/auth', [AuthController::class, 'getAuthData']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::get('/dashboard', DashboardController::class);
 
     Route::apiResources(['products' => ProductController::class]);
     Route::apiResources(['customers' => CustomerController::class]);
