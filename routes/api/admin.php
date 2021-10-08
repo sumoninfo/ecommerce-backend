@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\ProductController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AuthController;
@@ -13,4 +14,5 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin-api', 'scopes:ad
     Route::post('/logout', [AuthController::class, 'logout']);
 
     Route::apiResources(['products' => ProductController::class]);
+    Route::apiResources(['customers' => CustomerController::class]);
 });
