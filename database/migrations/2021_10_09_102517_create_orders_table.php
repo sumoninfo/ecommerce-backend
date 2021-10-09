@@ -16,13 +16,13 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->index()->comment("Customer")->constrained()->onDelete('cascade');
-            $table->string("contact_email")->nullable();
+            $table->string("customer_email")->nullable();
             $table->text('shipping_address')->nullable();
             $table->float("sub_total", 22, 4)->default(0);
             $table->integer("total_quantity")->default(0);
             $table->float("discount", 5, 2)->default(0);
             $table->float("shipping_cost", 5, 2)->default(0);
-            $table->float("grand_total", 22, 4)->index();
+            $table->float("grand_total", 22, 4)->index()->default(0);
             $table->text("note")->nullable();
             $table->enum('status', ['Approved', 'Rejected', 'Processing', 'Shipped', 'Delivered', 'Pending'])->default('Pending');
             $table->timestamps();

@@ -27,7 +27,7 @@ class ProductFactory extends Factory
             'quantity'    => $this->faker->randomNumber(3),
             'price'       => $this->faker->randomFloat(4),
             'description' => $this->faker->text(300),
-            'image'       => $this->faker->image(Storage::disk('public')->url("products/")),
+            'image'       => "{$this->faker->randomElement([1, 2, 3, 4, 5, 6, 7, 8, 9, 10])}.png",
             'created_by'  => 1,
         ];
     }
