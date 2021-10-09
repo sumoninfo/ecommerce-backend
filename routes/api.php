@@ -4,7 +4,6 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
 Route::get('/products', [\App\Http\Controllers\FrontendController::class, 'getProducts']);
-Route::apiResources(['carts' => \App\Http\Controllers\CartController::class]);
 
 //Customer Login & Register
 Route::post('/register', [AuthController::class, 'register']);
