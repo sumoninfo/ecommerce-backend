@@ -15,12 +15,13 @@ class ProductResource extends JsonResource
      */
     public function toArray($request): array
     {
-        $image = $this->image ?? "https://images.unsplash.com/photo-1508423134147-addf71308178?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80";
+        $image = $this->image ??
+                 "https://images.unsplash.com/photo-1508423134147-addf71308178?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80";
         return [
             'id'          => $this->id,
             'name'        => $this->name,
             'price'       => $this->price,
-            'qty'         => $this->qty,
+            'quantity'    => $this->quantity,
             'description' => $this->description,
             //'image'       => Storage::disk('public')->url("products/{$image}"),
             'image'       => "https://images.unsplash.com/photo-1508423134147-addf71308178?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&h=400&q=80",
