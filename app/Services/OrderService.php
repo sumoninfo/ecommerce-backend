@@ -36,13 +36,13 @@ class OrderService
         $items = [];
         $total = 0;
         foreach ($carts as $cart) {
-            $product   = Product::find($cart->product_id);
-            $sub_total = $product->price * $cart->quantity;
+            $product   = Product::findOrFail($cart['product_id']);
+            $sub_total = $product->price * $cart['quantity'];
             $total     += $sub_total;
             $item      = [
                 'product_id' => $product->id,
                 'price'      => $product->price,
-                'quantity'   => $cart->quantity,
+                'quantity'   => $cart['quantity'],
                 'sub_total'  => $sub_total,
             ];
             array_push($items, $item);
