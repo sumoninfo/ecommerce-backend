@@ -16,6 +16,7 @@ class CreateOrdersTable extends Migration
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
             $table->foreignId('user_id')->index()->comment("Customer")->constrained()->onDelete('cascade');
+            $table->string("order_no")->nullable();
             $table->string("customer_email")->nullable();
             $table->text('shipping_address')->nullable();
             $table->float("sub_total", 22, 4)->default(0);

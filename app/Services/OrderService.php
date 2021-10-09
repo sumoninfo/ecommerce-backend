@@ -27,6 +27,8 @@ class OrderService
         $order->customer_email = $auth->email;
         $order->save();
         $sub_total          = $this->storeOrderItems($order, $request->carts);
+        $order->order_no    = Helper::generateOrderNo($order->id);
+        $order->sub_total   = $sub_total;
         $order->grand_total = $sub_total + $request->shipping_cost;
         $order->save();
     }
@@ -49,5 +51,20 @@ class OrderService
         }
         $order->orderItems()->createMany($items);
         return $total;
+    }
+
+    public function getOrdersWithSearchAndFilter(Request $request)
+    {
+        $query = Order::query();
+        if ($request->filled('search')) {
+            $query->whereHas('user', function ($q) use ($request) {
+                $q->where('name', 'LIKE', "%{$request->search}%")
+                    ->orWhere('email', 'LIKE', "%{$request->search}%")
+                    ->orWhere('phone', 'LIKE', "%{$request->search}%");
+            });
+            $query->where('order_no', 'LIKE', "%{$request->search}%");
+        }
+        $orders = $query->latest()->paginate($request->get('per_page', config('constant.mrhPagination')));
+        return $orders;
     }
 }

@@ -14,6 +14,7 @@ class Order extends Model
     protected $guarded  = [];
     protected $fillable = [
         'user_id',
+        'order_no',
         'customer_email',
         'shipping_address',
         'sub_total',

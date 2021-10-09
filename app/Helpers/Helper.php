@@ -3,6 +3,7 @@
 
 namespace App\Helpers;
 
+use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -43,5 +44,17 @@ class Helper
             $file_name = '';
         }
         return $file_name;
+    }
+
+
+    /**
+     * generate order no
+     *
+     * @param $patient_id
+     * @return string
+     */
+    public static function generateOrderNo($order_id)
+    {
+        return 'O-' . Carbon::now()->format('ymd') . '-' . sprintf("%03d", $order_id);
     }
 }
