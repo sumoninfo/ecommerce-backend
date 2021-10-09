@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
@@ -13,4 +14,6 @@ Route::post('/login', [AuthController::class, 'login']);
 Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user']], function () {
     Route::get('/auth', [AuthController::class, 'getAuthData']);
     Route::post('/logout', [AuthController::class, 'logout']);
+
+    Route::apiResources(['orders' => OrderController::class]);
 });

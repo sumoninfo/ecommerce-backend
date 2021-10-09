@@ -4,6 +4,7 @@ namespace Database\Factories;
 
 use App\Models\Product;
 use Illuminate\Database\Eloquent\Factories\Factory;
+use Illuminate\Support\Facades\Storage;
 
 class ProductFactory extends Factory
 {
@@ -26,7 +27,7 @@ class ProductFactory extends Factory
             'quantity'    => $this->faker->randomNumber(3),
             'price'       => $this->faker->randomFloat(4),
             'description' => $this->faker->text(300),
-            'image'       => 'https://source.unsplash.com/random',
+            'image'       => $this->faker->image(Storage::disk('public')->url("products/")),
             'created_by'  => 1,
         ];
     }

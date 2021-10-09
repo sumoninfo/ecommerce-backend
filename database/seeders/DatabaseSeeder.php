@@ -16,6 +16,6 @@ class DatabaseSeeder extends Seeder
     {
         Artisan::call('passport:install');
         $this->call(AdminUserSeeder::class);
-        \App\Models\Product::factory(50)->create();
+        \App\Models\Product::factory(25)->create();
     }
 }
