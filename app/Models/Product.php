@@ -34,7 +34,7 @@ class Product extends Model
     }
 
     /**
-     * Get the User that owns the Product. (Created By)
+     * Get the User that owns the ProductService. (Created By)
      */
     public function createdBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {

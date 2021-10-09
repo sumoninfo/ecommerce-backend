@@ -42,7 +42,7 @@ class ProductController extends Controller
         $request->offsetUnset('image');
         $product->fill($request->all());
         $product->save();
-        return Helper::returnResponse("success", "Product Created successfully", $product);
+        return Helper::returnResponse("success", "ProductService Created successfully", $product);
     }
 
     /**

@@ -3,8 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Resources\Admin\ProductResource;
-use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class FrontendController extends Controller
 {
@@ -12,15 +13,11 @@ class FrontendController extends Controller
      * return products with searching and filtering
      *
      * @param Request $request
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
-    public function getProducts(Request $request)
+    public function getProducts(Request $request): AnonymousResourceCollection
     {
-        $query = Product::query();
-        if ($request->filled('search')) {
-            $query->where('name', 'LIKE', "%{$request->search}%");
-        }
-        $query = $query->latest()->paginate($request->get('per_page', config('constant.pagination')));
-        return ProductResource::collection($query);
+        $products = (new ProductService())->productSearchWithFilter($request);
+        return ProductResource::collection($products);
     }
 }
