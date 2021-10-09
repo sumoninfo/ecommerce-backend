@@ -20,6 +20,7 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin-api', 'scopes:ad
 
     Route::apiResources(['products' => ProductController::class]);
     Route::apiResources(['customers' => CustomerController::class]);
+    Route::post('/status-update/{order}/{status}', [OrderController::class, 'orderStatusUpdate']);
     Route::get('/orders', [OrderController::class, 'getOrders']);
     //admin profile
     Route::get('/profile/{admin}', [ProfileController::class, 'show']);

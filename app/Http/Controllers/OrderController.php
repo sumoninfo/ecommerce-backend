@@ -17,12 +17,8 @@ class OrderController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Order::query();
-        if ($request->filled('search')) {
-            $query->where('name', 'LIKE', "%{$request->search}%");
-        }
-        $query = $query->latest()->paginate($request->get('per_page', config('constant.mrhPagination')));
-        return OrderResource::collection($query);
+        $orders = (new OrderService())->getOrdersWithSearchAndFilter($request, 'user');
+        return OrderResource::collection($orders);
     }
 
     /**

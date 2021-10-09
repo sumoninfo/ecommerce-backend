@@ -33,6 +33,13 @@ class OrderService
         $order->save();
     }
 
+    /**
+     * Store order items
+     *
+     * @param $order
+     * @param $carts
+     * @return float|int
+     */
     public function storeOrderItems($order, $carts)
     {
         $items = [];
@@ -53,18 +60,24 @@ class OrderService
         return $total;
     }
 
-    public function getOrdersWithSearchAndFilter(Request $request)
+    /**
+     * return orders with searching and filtering
+     *
+     * @param Request $request
+     * @return LengthAwarePaginator
+     */
+    public function getOrdersWithSearchAndFilter(Request $request, $type = null)
     {
         $query = Order::query();
-        if ($request->filled('search')) {
-            $query->whereHas('user', function ($q) use ($request) {
-                $q->where('name', 'LIKE', "%{$request->search}%")
-                    ->orWhere('email', 'LIKE', "%{$request->search}%")
-                    ->orWhere('phone', 'LIKE', "%{$request->search}%");
-            });
-            $query->where('order_no', 'LIKE', "%{$request->search}%");
+        if ($type == 'user') {
+            $query->where('user_id', auth()->id());
         }
-        $orders = $query->latest()->paginate($request->get('per_page', config('constant.mrhPagination')));
-        return $orders;
+        if ($request->filled('search')) {
+            $query->whereLike(['order_no', 'user.name', 'user.phone', 'user.email'], $request->search);
+        }
+        if ($request->filled('status')) {
+            $query->where('status', $request->status);
+        }
+        return $query->latest()->paginate($request->get('per_page', config('constant.mrhPagination')));
     }
 }
