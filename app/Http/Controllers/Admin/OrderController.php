@@ -7,9 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Delivery;
 use App\Models\Order;
-use App\Models\OrderStatusHistory;
 use App\Services\OrderService;
-use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -33,9 +31,9 @@ class OrderController extends Controller
      *
      * @return AnonymousResourceCollection
      */
-    public function deliveredOrders(Request $request)
+    public function deliveredOrders(Request $request): AnonymousResourceCollection
     {
-        $orders = (new OrderService())->getDeliveredOrdersWithSearchAndFilter($request, 'user');
+        $orders = (new OrderService())->getDeliveredOrdersWithSearchAndFilter($request);
         return OrderResource::collection($orders);
     }
 

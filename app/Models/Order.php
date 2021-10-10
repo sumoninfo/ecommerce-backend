@@ -23,7 +23,7 @@ class Order extends Model
         'discount',
         'shipping_cost',
         'grand_total',
-        'order_note',
+        'note',
         'status',
     ];
 

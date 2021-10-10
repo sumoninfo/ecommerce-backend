@@ -7,6 +7,7 @@ use App\Helpers\Helper;
 use App\Http\Requests\Admin\ProductRequest;
 use App\Http\Resources\Admin\ProductResource;
 use App\Models\Product;
+use App\Services\ProductService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -19,12 +20,8 @@ class ProductController extends Controller
      */
     public function index(Request $request)
     {
-        $query = Product::query();
-        if ($request->filled('search')) {
-            $query->where('name', 'LIKE', "%{$request->search}%");
-        }
-        $query = $query->latest()->paginate($request->get('per_page', config('constant.pagination')));
-        return ProductResource::collection($query);
+        $products = (new ProductService())->productSearchWithFilter($request);
+        return ProductResource::collection($products);
     }
 
     /**

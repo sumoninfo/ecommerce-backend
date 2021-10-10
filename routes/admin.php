@@ -20,10 +20,11 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin-api', 'scopes:ad
 
     Route::apiResources(['products' => ProductController::class]);
     Route::apiResources(['customers' => CustomerController::class]);
+    //Orders
+    Route::get('/delivered-orders', [OrderController::class, 'deliveredOrders']);
     Route::post('/status-update/{order}/{status}', [OrderController::class, 'orderStatusUpdate']);
     Route::get('/orders', [OrderController::class, 'getOrders']);
     Route::get('/orders/{order}', [OrderController::class, 'show']);
-    Route::get('/delivered-orders', [OrderController::class, 'deliveredOrders']);
     //admin profile
     Route::get('/profile/{admin}', [ProfileController::class, 'show']);
     Route::put('/profile/{admin}', [ProfileController::class, 'update']);

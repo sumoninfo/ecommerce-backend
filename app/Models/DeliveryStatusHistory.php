@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class DeliveryStatusHistory extends Model
 {
@@ -26,13 +27,5 @@ class DeliveryStatusHistory extends Model
         static::creating(function ($model) {
             $model->created_by = auth()->id();
         });
-    }
-
-    /**
-     * Get the User that owns the DeliveryStatusHistory. (Created By)
-     */
-    public function createdBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo
-    {
-        return $this->belongsTo(User::class, 'created_by', 'id');
     }
 }

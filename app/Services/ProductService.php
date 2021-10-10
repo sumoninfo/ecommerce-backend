@@ -6,8 +6,6 @@ use App\Models\Product;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
-;
-
 class ProductService
 {
     /**

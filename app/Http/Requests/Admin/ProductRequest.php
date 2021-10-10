@@ -41,6 +41,8 @@ class ProductRequest extends FormRequest
     {
         return [
             'name.required' => 'The Name field is required.',
+            'name.price'    => 'The Price field is required.',
+            'name.quantity' => 'The Quantity field is required.',
         ];
     }
 }

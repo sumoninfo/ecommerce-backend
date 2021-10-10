@@ -49,7 +49,7 @@ class OrderService
      * @param $carts
      * @return float|int
      */
-    public function storeOrderItems($order, $carts)
+    private function storeOrderItems($order, $carts)
     {
         $items = [];
         $total = 0;
@@ -74,7 +74,7 @@ class OrderService
      *
      * @param $order
      */
-    public function customerOrderNotify($order)
+    private function customerOrderNotify($order)
     {
         $notify_details = [
             'greeting'   => "Hi {$order->user->name}",
@@ -92,7 +92,7 @@ class OrderService
      *
      * @param $order
      */
-    public function adminOrderNotify($order)
+    private function adminOrderNotify($order)
     {
         $admin   = Admin::first();
         $details = [
@@ -112,7 +112,7 @@ class OrderService
      *
      * @param Order $order
      */
-    public function orderStatusNotify(Order $order)
+    private function orderStatusNotify(Order $order)
     {
         $notify_details = [
             'greeting'   => "Hi {$order->user->name}",
@@ -140,10 +140,10 @@ class OrderService
 
             //when order status delivered product quantity update
             if ($status == 'Delivered')
-                (new OrderService())->orderProductQtyUpdate($order);
+                $this->orderProductQtyUpdate($order);
         }
         //Customer Order status update notify
-        (new OrderService())->orderStatusNotify($order);
+        $this->orderStatusNotify($order);
     }
 
     /**
@@ -151,7 +151,7 @@ class OrderService
      *
      * @param Order $order
      */
-    public function orderProductQtyUpdate(Order $order)
+    private function orderProductQtyUpdate(Order $order)
     {
         foreach ($order->orderItems as $orderItem) {
             $orderItem->product()->decrement('quantity', $orderItem->quantity);

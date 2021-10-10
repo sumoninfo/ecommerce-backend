@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\Product;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Artisan;
 
@@ -16,6 +17,6 @@ class DatabaseSeeder extends Seeder
     {
         Artisan::call('passport:install');
         $this->call(AdminUserSeeder::class);
-        \App\Models\Product::factory(25)->create();
+//        Product::factory(25)->create();
     }
 }

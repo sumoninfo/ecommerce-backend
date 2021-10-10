@@ -24,8 +24,8 @@ class AdminUserSeeder extends Seeder
         ]);
         //Create dummy customer user
         User::create([
-            'name'     => "User",
-            'email'    => "user@gmail.com",
+            'name'     => "Customer",
+            'email'    => "customer@gmail.com",
             'password' => Hash::make(12345678),
         ]);
     }
