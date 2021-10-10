@@ -38,14 +38,8 @@ class OrderController extends Controller
     {
         $order->status = $status;
         $order->save();
-        if ($status != 'Pending') {
-            $history = $order->orderStatusHistory
-                ?: new OrderStatusHistory();
-
-            $history->{strtolower($status)} = Carbon::now()->toDateString();
-            $order->orderStatusHistory()->save($history);
-        }
-        (new OrderService())->orderStatusNotify($order);
+        //Store and updated order status history with date
+        (new OrderService())->orderStatusUpdate($order, $status);
         return Helper::returnResponse("success", "Order Status update successfully", $order);
     }
 

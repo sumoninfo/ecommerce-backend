@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\Helper;
 use App\Models\Admin;
 use App\Models\Order;
+use App\Models\OrderStatusHistory;
 use App\Models\Product;
 use App\Notifications\NewOrderNotify;
 use App\Notifications\OrderStatusNotify;
@@ -108,9 +109,9 @@ class OrderService
     /**
      * order status update notify
      *
-     * @param $order
+     * @param Order $order
      */
-    public function orderStatusNotify($order)
+    public function orderStatusNotify(Order $order)
     {
         $notify_details = [
             'greeting'   => "Hi {$order->user->name}",
@@ -121,6 +122,39 @@ class OrderService
             'order_id'   => $order->order_no
         ];
         Notification::send($order->user, new OrderStatusNotify($notify_details));
+    }
+
+    /**
+     * order status status update
+     *
+     * @param Order $order
+     */
+    public function orderStatusUpdate(Order $order, $status)
+    {
+        if ($status != 'Pending') {
+            $history                        = $order->orderStatusHistory
+                ?: new OrderStatusHistory();
+            $history->{strtolower($status)} = Carbon::now()->toDateString();
+            $order->orderStatusHistory()->save($history);
+
+            //when order status delivered product quantity update
+            if ($status == 'Delivered')
+                (new OrderService())->orderProductQtyUpdate($order);
+        }
+        //Customer Order status update notify
+        (new OrderService())->orderStatusNotify($order);
+    }
+
+    /**
+     * when order status delivered product quantity update
+     *
+     * @param Order $order
+     */
+    public function orderProductQtyUpdate(Order $order)
+    {
+        foreach ($order->orderItems as $orderItem) {
+            $orderItem->product()->decrement('quantity', $orderItem->quantity);
+        }
     }
 
     /**

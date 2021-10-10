@@ -63,7 +63,7 @@ class ProductController extends Controller
      * @param \App\Models\Product $product
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, Product $product)
+    public function update(ProductRequest $request, Product $product)
     {
         if ($request->filled('image')) {
             if (Storage::disk('public')->exists('products/' . $product->image)) {
