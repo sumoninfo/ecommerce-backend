@@ -45,8 +45,10 @@ class OrderController extends Controller
             $history->{strtolower($status)} = Carbon::now()->toDateString();
             $order->orderStatusHistory()->save($history);
         }
+        (new OrderService())->orderStatusNotify($order);
         return Helper::returnResponse("success", "Order Status update successfully", $order);
     }
+
 
     /**
      * Display the specified resource.

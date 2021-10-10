@@ -3,13 +3,15 @@
 namespace App\Services;
 
 use App\Helpers\Helper;
+use App\Models\Admin;
 use App\Models\Order;
 use App\Models\Product;
+use App\Notifications\NewOrderNotify;
+use App\Notifications\OrderStatusNotify;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
-
-;
+use Illuminate\Support\Facades\Notification;
 
 class OrderService
 {
@@ -17,7 +19,7 @@ class OrderService
      * product search and filter
      *
      * @param Request $request
-     * @return LengthAwarePaginator
+     * @return string
      */
     public function placeAnOrder(Request $request)
     {
@@ -33,6 +35,9 @@ class OrderService
         $order->sub_total   = $sub_total;
         $order->grand_total = $sub_total + $request->shipping_cost;
         $order->save();
+        $this->customerOrderNotify($order);
+        $this->adminOrderNotify($order);
+        return $order;
     }
 
     /**
@@ -60,6 +65,62 @@ class OrderService
         }
         $order->orderItems()->createMany($items);
         return $total;
+    }
+
+    /**
+     * Order notify
+     *
+     * @param $order
+     */
+    public function customerOrderNotify($order)
+    {
+        $notify_details = [
+            'greeting'   => "Hi {$order->user->name}",
+            'body'       => "Your Order No: {$order->order_no}, Grand Total: Tk. {$order->grand_total}",
+            'thanks'     => 'Thank you very much for doing business with us.',
+            'actionText' => 'Order Details',
+            'actionURL'  => config('app.frontend_url') . '/order/' . $order->id,
+            'order_id'   => $order->order_no
+        ];
+        Notification::send($order->user, new NewOrderNotify($notify_details));
+    }
+
+    /**
+     * Order notify
+     *
+     * @param $order
+     */
+    public function adminOrderNotify($order)
+    {
+        $admin   = Admin::first();
+        $details = [
+            'greeting'   => "Hi {$admin->name}, New Order notify",
+            'body'       => "New Order: Customer name: {$order->user->name}, Order No: {$order->order_no}, Grand Total: Tk."
+                            . number_format($order->grand_total, 2),
+            'thanks'     => 'Thank you very much for doing business with us.',
+            'actionText' => 'Order Details',
+            'actionURL'  => config('app.frontend_url') . '/admin/order/' . $order->id,
+            'order_id'   => $order->order_no
+        ];
+        Notification::send($admin, new NewOrderNotify($details));
+    }
+
+    /**
+     * order status update notify
+     *
+     * @param $order
+     */
+    public function orderStatusNotify($order)
+    {
+        $notify_details = [
+            'greeting'   => "Hi {$order->user->name}",
+            'body'       => "Your Order Status: {$order->status}",
+            'thanks'     => 'Thank you very much for doing business with us.',
+            'actionText' => 'Order Details',
+            'actionURL'  => config('app.frontend_url') . '/order/' . $order->id,
+            'order_id'   => $order->order_no
+        ];
+        Notification::send($order->user, new OrderStatusNotify($notify_details));
     }
 
     /**

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
+use App\Http\Requests\OrderRequest;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
 use App\Services\OrderService;
@@ -25,12 +26,18 @@ class OrderController extends Controller
      * Store a newly created resource in storage.
      *
      * @param \Illuminate\Http\Request $request
-     * @return \Illuminate\Http\JsonResponse
+     * @return string
      */
-    public function store(Request $request)
+    public function store(OrderRequest $request)
     {
-        $order = (new OrderService())->placeAnOrder($request);
-        return Helper::returnResponse("success", "Order Created successfully", $order);
+        try {
+            $order = (new OrderService())->placeAnOrder($request);
+            return Helper::returnResponse("success", "Order Created successfully", $order);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => $e->getMessage()
+            ], 500);
+        }
     }
 
     /**
