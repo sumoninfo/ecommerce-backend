@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 
-class Order extends Model
+class Delivery extends Model
 {
     use HasFactory;
 
@@ -54,7 +54,7 @@ class Order extends Model
      */
     public function orderItems(): HasMany
     {
-        return $this->hasMany(OrderItem::class);
+        return $this->hasMany(DeliveryItem::class, 'order_id', 'id');
     }
 
     /**
@@ -64,6 +64,6 @@ class Order extends Model
      */
     public function orderStatusHistory(): HasOne
     {
-        return $this->hasOne(OrderStatusHistory::class);
+        return $this->hasOne(DeliveryStatusHistory::class, 'order_id', 'id');
     }
 }
