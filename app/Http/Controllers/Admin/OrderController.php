@@ -6,7 +6,9 @@ use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
 use App\Models\Order;
+use App\Models\OrderStatusHistory;
 use App\Services\OrderService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
@@ -36,8 +38,16 @@ class OrderController extends Controller
     {
         $order->status = $status;
         $order->save();
+        if ($status != 'Pending') {
+            $history = $order->orderStatusHistory
+                ?: new OrderStatusHistory();
+
+            $history->{strtolower($status)} = Carbon::now()->toDateString();
+            $order->orderStatusHistory()->save($history);
+        }
         return Helper::returnResponse("success", "Order Status update successfully", $order);
     }
+
     /**
      * Display the specified resource.
      *

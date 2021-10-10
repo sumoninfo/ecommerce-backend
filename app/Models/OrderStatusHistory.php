@@ -9,11 +9,16 @@ class OrderStatusHistory extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $guarded  = [];
     protected $fillable = [
-
+        'approved',
+        'processing',
+        'shipped',
+        'delivered',
+        'rejected',
         'created_by'
     ];
+
     /**
      * The "boot" method of the model.
      *
@@ -29,7 +34,7 @@ class OrderStatusHistory extends Model
     }
 
     /**
-     * Get the User that owns the OrderStatusHistory. (Created By)
+     * Get the User that owns the OrderStatusHistoryResource. (Created By)
      */
     public function createdBy(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
