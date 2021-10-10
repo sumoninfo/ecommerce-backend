@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
+use App\Models\Delivery;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
 use App\Services\OrderService;
@@ -24,6 +25,17 @@ class OrderController extends Controller
     public function getOrders(Request $request): AnonymousResourceCollection
     {
         $orders = (new OrderService())->getOrdersWithSearchAndFilter($request);
+        return OrderResource::collection($orders);
+    }
+
+    /**
+     * Get delivered orders.
+     *
+     * @return AnonymousResourceCollection
+     */
+    public function deliveredOrders(Request $request)
+    {
+        $orders = (new OrderService())->getDeliveredOrdersWithSearchAndFilter($request, 'user');
         return OrderResource::collection($orders);
     }
 
@@ -50,8 +62,12 @@ class OrderController extends Controller
      * @param Order $order
      * @return OrderResource
      */
-    public function show(Order $order): OrderResource
+    public function show($id, Request $request)
     {
+        $order = Order::find($id);
+        if ($request->type == 'delivered') {
+            $order = Delivery::find($id);
+        }
         return new OrderResource($order);
     }
 }

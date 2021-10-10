@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Helpers\Helper;
 use App\Models\Admin;
+use App\Models\Delivery;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
 use App\Models\Product;
@@ -174,6 +175,24 @@ class OrderService
         }
         if ($request->filled('status')) {
             $query->where('status', $request->status);
+        }
+        return $query->latest()->paginate($request->get('per_page', config('constant.mrhPagination')));
+    }
+
+    /**
+     * return orders with searching and filtering
+     *
+     * @param Request $request
+     * @return LengthAwarePaginator
+     */
+    public function getDeliveredOrdersWithSearchAndFilter(Request $request, $type = null)
+    {
+        $query = Delivery::query();
+        if ($type == 'user') {
+            $query->where('user_id', auth()->id());
+        }
+        if ($request->filled('search')) {
+            $query->whereLike(['order_no', 'user.name', 'user.phone', 'user.email'], $request->search);
         }
         return $query->latest()->paginate($request->get('per_page', config('constant.mrhPagination')));
     }

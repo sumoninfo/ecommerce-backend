@@ -5,20 +5,33 @@ namespace App\Http\Controllers;
 use App\Helpers\Helper;
 use App\Http\Requests\OrderRequest;
 use App\Http\Resources\OrderResource;
+use App\Models\Delivery;
 use App\Models\Order;
 use App\Services\OrderService;
 use Illuminate\Http\Request;
+use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class OrderController extends Controller
 {
     /**
      * Display a listing of the resource.
      *
-     * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
+     * @return AnonymousResourceCollection
      */
     public function index(Request $request)
     {
         $orders = (new OrderService())->getOrdersWithSearchAndFilter($request, 'user');
+        return OrderResource::collection($orders);
+    }
+
+    /**
+     * Get delivered orders.
+     *
+     * @return AnonymousResourceCollection
+     */
+    public function deliveredOrders(Request $request)
+    {
+        $orders = (new OrderService())->getDeliveredOrdersWithSearchAndFilter($request, 'user');
         return OrderResource::collection($orders);
     }
 
@@ -46,8 +59,12 @@ class OrderController extends Controller
      * @param \App\Models\Order $order
      * @return OrderResource
      */
-    public function show(Order $order)
+    public function show($id, Request $request)
     {
+        $order = Order::find($id);
+        if ($request->type == 'delivered'){
+            $order = Delivery::find($id);
+        }
         return new OrderResource($order->where('user_id', auth()->id())->first());
     }
 
