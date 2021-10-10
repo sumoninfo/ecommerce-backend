@@ -17,7 +17,9 @@ class OrderResource extends JsonResource
         return [
             'id'               => $this->id,
             'order_no'         => $this->order_no,
+            'date'             => $this->date,
             'user'             => new UserResource($this->user),
+            'order_items'      => OrderItemResource::collection($this->orderItems),
             'customer_email'   => $this->customer_email,
             'shipping_address' => $this->shipping_address,
             'sub_total'        => $this->sub_total,

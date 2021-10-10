@@ -5,6 +5,7 @@ namespace App\Services;
 use App\Helpers\Helper;
 use App\Models\Order;
 use App\Models\Product;
+use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
 
@@ -24,6 +25,7 @@ class OrderService
         $order = new Order();
         $order->fill($request->all());
         $order->user_id        = $auth->id;
+        $order->date           = Carbon::now()->toDateString();
         $order->customer_email = $auth->email;
         $order->save();
         $sub_total          = $this->storeOrderItems($order, $request->carts);
