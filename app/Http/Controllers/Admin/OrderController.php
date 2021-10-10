@@ -38,4 +38,14 @@ class OrderController extends Controller
         $order->save();
         return Helper::returnResponse("success", "Order Status update successfully", $order);
     }
+    /**
+     * Display the specified resource.
+     *
+     * @param Order $order
+     * @return OrderResource
+     */
+    public function show(Order $order): OrderResource
+    {
+        return new OrderResource($order);
+    }
 }
