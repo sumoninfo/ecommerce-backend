@@ -1,11 +1,13 @@
 <?php
 
+use App\Http\Controllers\FrontendController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
-Route::get('/products', [\App\Http\Controllers\FrontendController::class, 'getProducts']);
+Route::get('/products', [FrontendController::class, 'getProducts']);
+Route::get('/check-product-stock/{product}', [FrontendController::class, 'checkProductStock']);
 
 //Customer Login & Register
 Route::post('/register', [AuthController::class, 'register']);
