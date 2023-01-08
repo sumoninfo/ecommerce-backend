@@ -18,9 +18,19 @@ Copy the example env file and make the required configuration changes in the .en
 
     cp .env.example .env
 
+Database configuration
+
+        DB_DATABASE=your_database_name
+        DB_USERNAME=your_user_name
+        DB_PASSWORD=your_password
+
 Generate a new application key
 
     php artisan key:generate
+
+Generate a new application key
+
+    php artisan storage:link
 
 Generate a new JWT authentication secret key
 
@@ -30,8 +40,7 @@ Start the local development server
 
     php artisan serve
 
-You can now access the server at http://localhost:8000 
-
+You can now access the server at http://localhost:8000
 
 ### Default Login credentials
 
