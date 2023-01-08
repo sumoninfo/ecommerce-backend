@@ -4,6 +4,7 @@
 namespace App\Helpers;
 
 use Carbon\Carbon;
+use Illuminate\Contracts\Auth\Authenticatable;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
@@ -12,9 +13,9 @@ class Helper
     /**
      * return auth user
      *
-     * @return \Illuminate\Contracts\Auth\Authenticatable|null
+     * @return Authenticatable|null
      */
-    public static function getAuth()
+    public static function getAuth(): ?Authenticatable
     {
         return Auth::user();
     }
@@ -22,7 +23,7 @@ class Helper
     /**
      * return response api
      */
-    public static function returnResponse($status = "success", $message = "Successfully", $data = null, $status_code = 200)
+    public static function returnResponse($status = "success", $message = "Successfully", $data = null, $status_code = 200): \Illuminate\Http\JsonResponse
     {
         return response()->json(['status' => $status, 'message' => $message, 'data' => $data], $status_code);
     }
@@ -31,9 +32,10 @@ class Helper
      * file upload
      *
      * @param $file
+     * @param string $path
      * @return string
      */
-    public static function fileUpload($file, $path = 'products/'): string
+    public static function fileUpload($file, string $path = 'rooms/'): string
     {
         $image_parts    = explode(";base64,", $file);
         $file           = base64_decode($image_parts[1]);
@@ -50,10 +52,10 @@ class Helper
     /**
      * generate order no
      *
-     * @param $patient_id
+     * @param $order_id
      * @return string
      */
-    public static function generateOrderNo($order_id)
+    public static function generateOrderNo($order_id): string
     {
         return 'O-' . Carbon::now()->format('ymd') . '-' . sprintf("%03d", $order_id);
     }

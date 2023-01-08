@@ -1,12 +1,12 @@
 <?php
 
+use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\OrderController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AuthController;
 
 //Route::post('admin/register', [AuthController::class, 'register']);
 Route::post('admin/login', [AuthController::class, 'login']);
@@ -18,6 +18,8 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin-api', 'scopes:ad
 
     Route::get('/dashboard', DashboardController::class);
 
+    Route::apiResources(['amenities' => \App\Http\Controllers\Admin\AmenityController::class]);
+    Route::apiResources(['rooms' => \App\Http\Controllers\Admin\RoomController::class]);
     Route::apiResources(['products' => ProductController::class]);
     Route::apiResources(['customers' => CustomerController::class]);
     //Orders

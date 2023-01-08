@@ -7,6 +7,8 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
 Route::get('/products', [FrontendController::class, 'getProducts']);
+Route::get('/rooms', [FrontendController::class, 'getRooms']);
+Route::get('/room/{room}', [FrontendController::class, 'getRoom']);
 Route::get('/check-product-stock/{product}', [FrontendController::class, 'checkProductStock']);
 
 //Customer Login & Register
@@ -24,4 +26,5 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
     //Orders
     Route::get('/delivered-orders', [OrderController::class, 'deliveredOrders']);
     Route::apiResources(['orders' => OrderController::class]);
+    Route::apiResources(['bookings' => BookingController::class]);
 });

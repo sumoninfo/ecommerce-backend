@@ -7,7 +7,7 @@ use App\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 
-class AdminUserSeeder extends Seeder
+class CustomerUserSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -17,38 +17,40 @@ class AdminUserSeeder extends Seeder
     public function run()
     {
         //Create dummy admin user
-        Admin::insert([
+        User::insert([
             [
-                'name'       => "Super Admin",
-                'email'      => "admin@gmail.com",
+                'name'       => "Customer",
+                'email'      => "customer@gmail.com",
                 'password'   => Hash::make(12345678), // 12345678
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name'       => "Main Admin",
-                'email'      => "main-admin@gmail.com",
+            ], [
+                'name'       => "Customer 1",
+                'email'      => "customer1@gmail.com",
                 'password'   => Hash::make(12345678), // 12345678
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name'       => "Main Admin 2",
-                'email'      => "main-admin2@gmail.com",
+            ], [
+                'name'       => "Customer 2",
+                'email'      => "customer2@gmail.com",
                 'password'   => Hash::make(12345678), // 12345678
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name'       => "Main Admin 3",
-                'email'      => "main-admin3@gmail.com",
+            ], [
+                'name'       => "Customer 3",
+                'email'      => "customer@gmail.com",
                 'password'   => Hash::make(12345678), // 12345678
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
-            ],
-            [
-                'name'       => "Main Admin 4",
-                'email'      => "main-admin4@gmail.com",
+            ], [
+                'name'       => "Customer 4",
+                'email'      => "customer4@gmail.com",
+                'password'   => Hash::make(12345678), // 12345678
+                'created_at' => date('Y-m-d H:i:s'),
+                'updated_at' => date('Y-m-d H:i:s'),
+            ], [
+                'name'       => "Customer 5",
+                'email'      => "customer5@gmail.com",
                 'password'   => Hash::make(12345678), // 12345678
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),
