@@ -50,13 +50,13 @@ class Helper
 
 
     /**
-     * generate order no
+     * generate booking no
      *
-     * @param $order_id
+     * @param $booking_id
      * @return string
      */
-    public static function generateOrderNo($order_id): string
+    public static function generateBookingNo($booking_id): string
     {
-        return 'O-' . Carbon::now()->format('ymd') . '-' . sprintf("%03d", $order_id);
+        return 'B-' . Carbon::now()->format('ymd') . '-' . sprintf("%03d", $booking_id);
     }
 }

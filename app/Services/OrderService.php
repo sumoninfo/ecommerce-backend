@@ -8,7 +8,7 @@ use App\Models\Delivery;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
 use App\Models\Product;
-use App\Notifications\NewOrderNotify;
+use App\Notifications\NewBookingNotify;
 use App\Notifications\OrderStatusNotify;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -84,7 +84,7 @@ class OrderService
             'actionURL'  => config('app.frontend_url') . '/order/' . $order->id,
             'order_id'   => $order->order_no
         ];
-        Notification::send($order->user, new NewOrderNotify($notify_details));
+        Notification::send($order->user, new NewBookingNotify($notify_details));
     }
 
     /**
@@ -104,7 +104,7 @@ class OrderService
             'actionURL'  => config('app.frontend_url') . '/admin/order/' . $order->id,
             'order_id'   => $order->order_no
         ];
-        Notification::send($admin, new NewOrderNotify($details));
+        Notification::send($admin, new NewBookingNotify($details));
     }
 
     /**

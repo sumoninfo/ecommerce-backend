@@ -7,7 +7,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Notifications\Messages\MailMessage;
 use Illuminate\Notifications\Notification;
 
-class NewOrderNotify extends Notification implements ShouldQueue
+class NewBookingNotify extends Notification implements ShouldQueue
 {
     use Queueable;
 
@@ -43,7 +43,7 @@ class NewOrderNotify extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject("New Order Notify, Order No: {$this->notify_details['order_id']}")
+            ->subject("New Booking Notify, Booking No: {$this->notify_details['booking_no']}")
             ->greeting($this->notify_details['greeting'])
             ->line($this->notify_details['body'])
             ->action($this->notify_details['actionText'], $this->notify_details['actionURL'])
@@ -59,7 +59,7 @@ class NewOrderNotify extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'order_id' => $this->notify_details['order_id']
+            'booking_no' => $this->notify_details['booking_no']
         ];
     }
 }

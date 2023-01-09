@@ -23,18 +23,12 @@ class BookingRequest extends FormRequest
      */
     public function rules()
     {
-        $rules            = [];
-        $rules['room_id'] = 'required';
-        return $rules;
-    }
-
-    /**
-     * Get the validation messages that apply to the request.
-     *
-     * @return array
-     */
-    public function messages()
-    {
-        return [];
+        return [
+            'room_id'        => 'required|exists:rooms,id',
+            'address'        => 'required',
+            'check_in'       => 'required',
+            'check_out'      => 'required',
+            'customer_number' => 'required'
+        ];
     }
 }

@@ -4,11 +4,13 @@ namespace App\Services;
 
 use App\Helpers\Helper;
 use App\Models\Admin;
+use App\Models\Booking;
 use App\Models\Delivery;
 use App\Models\Order;
 use App\Models\OrderStatusHistory;
 use App\Models\Product;
-use App\Notifications\NewOrderNotify;
+use App\Models\Room;
+use App\Notifications\NewBookingNotify;
 use App\Notifications\OrderStatusNotify;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -25,50 +27,22 @@ class BookingService
      */
     public function storeBooking(Request $request)
     {
-        $auth  = auth()->user();
-        $order = new Order();
-        $order->fill($request->all());
-        $order->user_id        = $auth->id;
-        $order->date           = Carbon::now()->toDateString();
-        $order->customer_email = $auth->email;
-        $order->save();
-
-
-        $sub_total          = $this->storeOrderItems($order, $request->carts);
-        $order->order_no    = Helper::generateOrderNo($order->id);
-        $order->sub_total   = $sub_total;
-        $order->grand_total = $sub_total + $request->shipping_cost;
-        $order->save();
-        $this->customerOrderNotify($order);
-        $this->adminOrderNotify($order);
-        return $order;
-    }
-
-    /**
-     * Store order items
-     *
-     * @param $order
-     * @param $carts
-     * @return float|int
-     */
-    private function storeOrderItems($order, $carts)
-    {
-        $items = [];
-        $total = 0;
-        foreach ($carts as $cart) {
-            $product   = Product::findOrFail($cart['product_id']);
-            $sub_total = $product->price * $cart['quantity'];
-            $total     += $sub_total;
-            $item      = [
-                'product_id' => $product->id,
-                'price'      => $product->price,
-                'quantity'   => $cart['quantity'],
-                'sub_total'  => $sub_total,
-            ];
-            array_push($items, $item);
-        }
-        $order->orderItems()->createMany($items);
-        return $total;
+        $auth                    = auth()->user();
+        $room                    = Room::find($request->room_id);
+        $booking                 = new Booking();
+        $booking->user_id        = $auth->id;
+        $booking->customer_email = $auth->email;
+        $booking->customer_number = $request->customer_number;
+        $booking->room_id        = $room->id;
+        $booking->date           = Carbon::now()->toDateString();
+        $booking->check_in       = Carbon::parse($request->check_in)->toDateTimeString();
+        $booking->check_out      = Carbon::parse($request->check_out)->toDateTimeString();
+        $booking->address        = $request->address;
+        $booking->note           = $request->note;
+        $booking->sub_total      = $room->price;
+        $booking->grand_total    = $room->price;
+        $booking->save();
+        return $booking;
     }
 
     /**
@@ -86,27 +60,7 @@ class BookingService
             'actionURL'  => config('app.frontend_url') . '/order/' . $order->id,
             'order_id'   => $order->order_no
         ];
-        Notification::send($order->user, new NewOrderNotify($notify_details));
-    }
-
-    /**
-     * Order notify
-     *
-     * @param $order
-     */
-    private function adminOrderNotify($order)
-    {
-        $admin   = Admin::first();
-        $details = [
-            'greeting'   => "Hi {$admin->name}, New Order notify",
-            'body'       => "New Order: Customer name: {$order->user->name}, Order No: {$order->order_no}, Grand Total: Tk."
-                            . number_format($order->grand_total, 2),
-            'thanks'     => 'Thank you very much for doing business with us.',
-            'actionText' => 'Order Details',
-            'actionURL'  => config('app.frontend_url') . '/admin/order/' . $order->id,
-            'order_id'   => $order->order_no
-        ];
-        Notification::send($admin, new NewOrderNotify($details));
+        Notification::send($order->user, new NewBookingNotify($notify_details));
     }
 
     /**

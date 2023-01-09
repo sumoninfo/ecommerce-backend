@@ -45,8 +45,8 @@ class BookingController extends Controller
      */
     public function store(BookingRequest $request)
     {
+       return $order = (new BookingService())->storeBooking($request);
         try {
-            $order = (new BookingService())->storeBooking($request);
             return Helper::returnResponse("success", "Order Created successfully", $order);
         } catch (\Exception $e) {
             return response()->json([
