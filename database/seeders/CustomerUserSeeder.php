@@ -38,7 +38,7 @@ class CustomerUserSeeder extends Seeder
                 'updated_at' => date('Y-m-d H:i:s'),
             ], [
                 'name'       => "Customer 3",
-                'email'      => "customer@gmail.com",
+                'email'      => "customer3@gmail.com",
                 'password'   => Hash::make(12345678), // 12345678
                 'created_at' => date('Y-m-d H:i:s'),
                 'updated_at' => date('Y-m-d H:i:s'),

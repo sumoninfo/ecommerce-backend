@@ -19,6 +19,7 @@ class CreateAdminsTable extends Migration
             $table->string('phone')->nullable();
             $table->string('image')->nullable();
             $table->text('address')->nullable();
+            $table->string('device_token')->nullable();
             $table->string('email')->unique();
             $table->string('password');
             $table->timestamps();

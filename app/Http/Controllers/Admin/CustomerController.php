@@ -17,7 +17,7 @@ class CustomerController extends Controller
      */
     public function index(Request $request)
     {
-        $query = User::query()->withCount('orders');
+        $query = User::query()->withCount('bookings');
         if ($request->filled('search')) {
             $query->where('name', 'LIKE', "%{$request->search}%");
         }

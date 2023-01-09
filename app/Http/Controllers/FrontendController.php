@@ -14,30 +14,24 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 class FrontendController extends Controller
 {
     /**
-     * return products with searching and filtering
-     *
      * @param Request $request
+     * @param RoomRepository $repository
      * @return AnonymousResourceCollection
      */
-    public function getProducts(Request $request): AnonymousResourceCollection
-    {
-        $products = (new ProductService())->productSearchWithFilter($request);
-        return ProductResource::collection($products);
-    }
 
     public function getRooms(Request $request, RoomRepository $repository)
     {
         return RoomResource::collection($repository->all($request));
     }
 
+    /**
+     * @param Room $room
+     * @param RoomRepository $repository
+     * @return RoomResource
+     */
     public function getRoom(Room $room, RoomRepository $repository)
     {
         return new RoomResource($repository->find($room));
-    }
-
-    public function checkProductStock(Product $product)
-    {
-        return $product->quantity;
     }
 
 }

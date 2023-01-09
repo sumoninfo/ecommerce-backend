@@ -2,15 +2,12 @@
 
 use App\Http\Controllers\BookingController;
 use App\Http\Controllers\FrontendController;
-use App\Http\Controllers\OrderController;
 use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
 
-Route::get('/products', [FrontendController::class, 'getProducts']);
 Route::get('/rooms', [FrontendController::class, 'getRooms']);
 Route::get('/room/{room}', [FrontendController::class, 'getRoom']);
-Route::get('/check-product-stock/{product}', [FrontendController::class, 'checkProductStock']);
 
 //Customer Login & Register
 Route::post('/register', [AuthController::class, 'register']);
