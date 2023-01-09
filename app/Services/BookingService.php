@@ -3,9 +3,7 @@
 namespace App\Services;
 
 use App\Models\Booking;
-use App\Models\BookingStatusHistory;
 use App\Models\Room;
-use App\Notifications\NewBookingNotify;
 use App\Notifications\BookingStatusNotify;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
@@ -64,72 +62,21 @@ class BookingService
     }
 
     /**
-     * Booking notify
-     *
-     * @param $booking
-     */
-    private function customerBookingNotify($booking)
-    {
-        $notify_details = [
-            'greeting'   => "Hi {$booking->user->name}",
-            'body'       => "Your Booking No: {$booking->booking_no}, Grand Total: Tk. {$booking->grand_total}",
-            'thanks'     => 'Thank you very much for doing business with us.',
-            'actionText' => 'Booking Details',
-            'actionURL'  => config('app.frontend_url') . '/order/' . $booking->id,
-            'booking_no' => $booking->booking_no
-        ];
-        Notification::send($booking->user, new NewBookingNotify($notify_details));
-    }
-
-    /**
-     * order status update notify
+     * booking status update notify
      *
      * @param Booking $booking
      */
-    private function orderStatusNotify(Booking $booking)
+    public function bookingStatusNotify(Booking $booking)
     {
         $notify_details = [
             'greeting'   => "Hi {$booking->user->name}",
-            'body'       => "Your Booking Status: {$booking->status}",
+            'body'       => "Your Booking : {$booking->status},  Booking No: {$booking->booking_no}",
             'thanks'     => 'Thank you very much for doing business with us.',
             'actionText' => 'Booking Details',
-            'actionURL'  => config('app.frontend_url') . '/order/' . $booking->id,
+            'actionURL'  => config('app.frontend_url') . '/booking/' . $booking->id,
             'booking_no' => $booking->booking_no
         ];
         Notification::send($booking->user, new BookingStatusNotify($notify_details));
-    }
-
-    /**
-     * order status status update
-     *
-     * @param Booking $booking
-     */
-    public function orderStatusUpdate(Booking $booking, $status)
-    {
-        if ($status != 'Pending') {
-            $history                        = $booking->orderStatusHistory
-                ?: new BookingStatusHistory();
-            $history->{strtolower($status)} = Carbon::now()->toDateString();
-            $booking->orderStatusHistory()->save($history);
-
-            //when order status delivered product quantity update
-            if ($status == 'Delivered')
-                $this->orderProductQtyUpdate($booking);
-        }
-        //Customer Booking status update notify
-        $this->orderStatusNotify($booking);
-    }
-
-    /**
-     * when order status delivered product quantity update
-     *
-     * @param Booking $booking
-     */
-    private function orderProductQtyUpdate(Booking $booking)
-    {
-        foreach ($booking->orderItems as $bookingItem) {
-            $bookingItem->product()->decrement('quantity', $bookingItem->quantity);
-        }
     }
 
 }

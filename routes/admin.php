@@ -3,7 +3,7 @@
 use App\Http\Controllers\Admin\AuthController;
 use App\Http\Controllers\Admin\CustomerController;
 use App\Http\Controllers\Admin\DashboardController;
-use App\Http\Controllers\Admin\OrderController;
+use App\Http\Controllers\Admin\BookingController;
 use App\Http\Controllers\Admin\ProductController;
 use App\Http\Controllers\Admin\ProfileController;
 use Illuminate\Support\Facades\Route;
@@ -20,13 +20,14 @@ Route::group(['prefix' => 'admin', 'middleware' => ['auth:admin-api', 'scopes:ad
 
     Route::apiResources(['amenities' => \App\Http\Controllers\Admin\AmenityController::class]);
     Route::apiResources(['rooms' => \App\Http\Controllers\Admin\RoomController::class]);
-    Route::apiResources(['products' => ProductController::class]);
     Route::apiResources(['customers' => CustomerController::class]);
+
+
+    Route::apiResources(['products' => ProductController::class]);
     //Orders
-    Route::get('/delivered-orders', [OrderController::class, 'deliveredOrders']);
-    Route::post('/status-update/{order}/{status}', [OrderController::class, 'orderStatusUpdate']);
-    Route::get('/orders', [OrderController::class, 'getOrders']);
-    Route::get('/orders/{order}', [OrderController::class, 'show']);
+    Route::post('/status-update/{booking}/{status}', [BookingController::class, 'bookingStatusUpdate']);
+    Route::get('/bookings', [BookingController::class, 'getBookings']);
+    Route::get('/bookings/{booking}', [BookingController::class, 'show']);
     //admin profile
     Route::get('/profile/{admin}', [ProfileController::class, 'show']);
     Route::put('/profile/{admin}', [ProfileController::class, 'update']);

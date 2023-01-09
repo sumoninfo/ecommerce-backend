@@ -43,7 +43,7 @@ class BookingStatusNotify extends Notification implements ShouldQueue
     public function toMail($notifiable)
     {
         return (new MailMessage)
-            ->subject("Order Status Updated, Order No: {$this->notify_details['order_id']}")
+            ->subject("Booking Status Updated, Booking No: {$this->notify_details['booking_no']}")
             ->greeting($this->notify_details['greeting'])
             ->line($this->notify_details['body'])
             ->action($this->notify_details['actionText'], $this->notify_details['actionURL'])
@@ -59,7 +59,7 @@ class BookingStatusNotify extends Notification implements ShouldQueue
     public function toArray($notifiable)
     {
         return [
-            'order_id' => $this->notify_details['order_id']
+            'booking_no' => $this->notify_details['booking_no']
         ];
     }
 }
