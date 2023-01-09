@@ -33,7 +33,7 @@ class BookingController extends Controller
      * @param $status
      * @return JsonResponse
      */
-    public function bookingStatusUpdate(Booking $booking, $status): JsonResponse
+    public function bookingStatusUpdate(Booking $booking, $status)
     {
         $booking->status = $status;
         $booking->save();
@@ -53,9 +53,6 @@ class BookingController extends Controller
     public function show($id, Request $request)
     {
         $booking = Booking::find($id);
-        if ($request->type == 'delivered') {
-            $booking = Delivery::find($id);
-        }
         return new BookingResource($booking);
     }
 }

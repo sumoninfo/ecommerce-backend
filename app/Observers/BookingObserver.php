@@ -4,6 +4,7 @@ namespace App\Observers;
 
 use App\Helpers\Helper;
 use App\Models\Booking;
+use App\Services\BookingService;
 
 class BookingObserver
 {
@@ -17,7 +18,7 @@ class BookingObserver
     {
         $booking->booking_no = Helper::generateBookingNo($booking->id);
         $booking->save();
-        $booking->adminBookingNotify($booking);
+        (new BookingService())->adminBookingNotify($booking);
     }
 
     /**

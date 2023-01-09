@@ -25,7 +25,9 @@ class AuthController extends Controller
             return response()->json(['message' => 'Access denied'], 403);
         }
         config(['auth.guards.api.provider' => 'user']);
-        $user        = User::select('users.*')->find(auth()->guard('user')->user()->id);
+        $user               = User::select('users.*')->find(auth()->guard('user')->user()->id);
+        $user->device_token = $request->firebase_token;
+        $user->save();
         $tokenResult = $user->createToken('MyEcommerceApp', ['user']);
         $token       = $tokenResult->token;
         if ($request->remember_me) {
@@ -61,10 +63,10 @@ class AuthController extends Controller
      */
     public function register(RegisterRequest $request): JsonResponse
     {
-        $user = new User();
-        $user->fill($request->all());
-        $user->password = Hash::make($request->password);
-        $user->save();
+        $data                 = $request->only(['name', 'email']);
+        $data['password']     = Hash::make($request->password);
+        $data['device_token'] = $request->firebase_token;
+        User::create($data);
         return response()->json(['message' => 'Registration successful']);
     }
 

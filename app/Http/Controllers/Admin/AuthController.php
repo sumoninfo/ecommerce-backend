@@ -25,6 +25,8 @@ class AuthController extends Controller
         }
         config(['auth.guards.api.provider' => 'admin']);
         $admin       = Admin::select('admins.*')->find(auth()->guard('admin')->user()->id);
+        $admin->device_token = $request->firebase_token;
+        $admin->save();
         $tokenResult = $admin->createToken('MyEcommerceApp', ['admin']);
         $token       = $tokenResult->token;
         if ($request->remember_me) {
