@@ -31,7 +31,7 @@ class {{ class }} extends Controller
           if ($request->filled('search')) {
               $query->where('name', 'LIKE', "%{$request->search}%");
           }
-          $query = $query->latest()->paginate($request->get('per_page', config('constant.mrhPagination')));
+          $query = $query->latest()->paginate($request->get('per_page', config('constant.pagination')));
           return {{ model }}Resource::collection($query);
     }
 

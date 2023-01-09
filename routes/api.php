@@ -24,8 +24,5 @@ Route::group(['prefix' => 'user', 'middleware' => ['auth:user-api', 'scopes:user
     //User profile update
     Route::get('/profile/{user}', [ProfileController::class, 'show']);
     Route::put('/profile/{user}', [ProfileController::class, 'update']);
-    //Orders
-    Route::get('/delivered-orders', [OrderController::class, 'deliveredOrders']);
-    Route::apiResources(['orders' => OrderController::class]);
     Route::apiResources(['bookings' => BookingController::class]);
 });

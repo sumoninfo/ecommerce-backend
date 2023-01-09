@@ -6,10 +6,10 @@ use App\Helpers\Helper;
 use App\Models\Admin;
 use App\Models\Delivery;
 use App\Models\Order;
-use App\Models\OrderStatusHistory;
+use App\Models\BookingStatusHistory;
 use App\Models\Product;
 use App\Notifications\NewBookingNotify;
-use App\Notifications\OrderStatusNotify;
+use App\Notifications\BookingStatusNotify;
 use Carbon\Carbon;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\Request;
@@ -122,7 +122,7 @@ class OrderService
             'actionURL'  => config('app.frontend_url') . '/order/' . $order->id,
             'order_id'   => $order->order_no
         ];
-        Notification::send($order->user, new OrderStatusNotify($notify_details));
+        Notification::send($order->user, new BookingStatusNotify($notify_details));
     }
 
     /**
@@ -134,7 +134,7 @@ class OrderService
     {
         if ($status != 'Pending') {
             $history                        = $order->orderStatusHistory
-                ?: new OrderStatusHistory();
+                ?: new BookingStatusHistory();
             $history->{strtolower($status)} = Carbon::now()->toDateString();
             $order->orderStatusHistory()->save($history);
 
@@ -176,7 +176,7 @@ class OrderService
         if ($request->filled('status')) {
             $query->where('status', $request->status);
         }
-        return $query->latest()->paginate($request->get('per_page', config('constant.mrhPagination')));
+        return $query->latest()->paginate($request->get('per_page', config('constant.pagination')));
     }
 
     /**
@@ -194,6 +194,6 @@ class OrderService
         if ($request->filled('search')) {
             $query->whereLike(['order_no', 'user.name', 'user.phone', 'user.email'], $request->search);
         }
-        return $query->latest()->paginate($request->get('per_page', config('constant.mrhPagination')));
+        return $query->latest()->paginate($request->get('per_page', config('constant.pagination')));
     }
 }

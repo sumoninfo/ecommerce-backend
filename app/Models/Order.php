@@ -64,6 +64,6 @@ class Order extends Model
      */
     public function orderStatusHistory(): HasOne
     {
-        return $this->hasOne(OrderStatusHistory::class);
+        return $this->hasOne(BookingStatusHistory::class);
     }
 }

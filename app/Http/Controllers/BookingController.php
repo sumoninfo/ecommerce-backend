@@ -4,14 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
 use App\Http\Requests\BookingRequest;
-use App\Http\Requests\OrderRequest;
-use App\Http\Resources\OrderResource;
-use App\Models\Delivery;
-use App\Models\Order;
+use App\Http\Resources\BookingResource;
+use App\Models\Booking;
 use App\Services\BookingService;
-use App\Services\OrderService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
+use Illuminate\Support\Facades\DB;
 
 class BookingController extends Controller
 {
@@ -22,77 +21,52 @@ class BookingController extends Controller
      */
     public function index(Request $request)
     {
-        $orders = (new BookingService())->getOrdersWithSearchAndFilter($request, 'user');
-        return OrderResource::collection($orders);
-    }
-
-    /**
-     * Get delivered orders.
-     *
-     * @return AnonymousResourceCollection
-     */
-    public function deliveredOrders(Request $request)
-    {
-        $orders = (new BookingService())->getDeliveredOrdersWithSearchAndFilter($request, 'user');
-        return OrderResource::collection($orders);
+        $bookings = (new BookingService())->getBookings($request, 'user');
+        return BookingResource::collection($bookings);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @return string
+     * @param BookingRequest $request
+     * @return JsonResponse
      */
     public function store(BookingRequest $request)
     {
-       return $order = (new BookingService())->storeBooking($request);
+        DB::beginTransaction();
         try {
-            return Helper::returnResponse("success", "Order Created successfully", $order);
+            $booking = (new BookingService())->storeBooking($request);
+            DB::commit();
+            return Helper::returnResponse("success", "Order Created successfully", $booking);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => $e->getMessage()
-            ], 500);
+            DB::rollback();
+            return Helper::returnResponse("success", $e->getMessage(), [], 500);
         }
     }
 
     /**
      * Display the specified resource.
      *
-     * @param \App\Models\Order $order
-     * @return OrderResource
+     * @param $id
+     * @param Request $request
+     * @return BookingResource
      */
     public function show($id, Request $request)
     {
-        $order = Order::find($id);
-        if ($request->type == 'delivered') {
-            $order = Delivery::find($id);
-        }
-        return new OrderResource($order->where('user_id', auth()->id())->first());
+        $booking = Booking::where('user_id', auth()->id())->find($id);
+        return new BookingResource($booking);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Models\Order $order
-     * @return \Illuminate\Http\JsonResponse
-     */
-    public function update(Request $request, Order $order)
-    {
-        $order->fill($request->all());
-        $order->update();
-        return Helper::returnResponse("success", "Updated successfully", $order);
-    }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Models\Order $order
-     * @return \Illuminate\Http\JsonResponse
+     * @param Booking $booking
+     * @return JsonResponse
      */
-    public function destroy(Order $order)
+    public function destroy(Booking $booking)
     {
-        $order->delete();
+        $booking->delete();
         return Helper::returnResponse("success", "Deleted successfully");
     }
 }

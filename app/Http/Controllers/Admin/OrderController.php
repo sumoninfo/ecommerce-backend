@@ -4,7 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Helpers\Helper;
 use App\Http\Controllers\Controller;
-use App\Http\Resources\OrderResource;
+use App\Http\Resources\BookingResource;
 use App\Models\Delivery;
 use App\Models\Order;
 use App\Services\OrderService;
@@ -23,7 +23,7 @@ class OrderController extends Controller
     public function getOrders(Request $request): AnonymousResourceCollection
     {
         $orders = (new OrderService())->getOrdersWithSearchAndFilter($request);
-        return OrderResource::collection($orders);
+        return BookingResource::collection($orders);
     }
 
     /**
@@ -34,7 +34,7 @@ class OrderController extends Controller
     public function deliveredOrders(Request $request): AnonymousResourceCollection
     {
         $orders = (new OrderService())->getDeliveredOrdersWithSearchAndFilter($request);
-        return OrderResource::collection($orders);
+        return BookingResource::collection($orders);
     }
 
     /**
@@ -58,7 +58,7 @@ class OrderController extends Controller
      * Display the specified resource.
      *
      * @param Order $order
-     * @return OrderResource
+     * @return BookingResource
      */
     public function show($id, Request $request)
     {
@@ -66,6 +66,6 @@ class OrderController extends Controller
         if ($request->type == 'delivered') {
             $order = Delivery::find($id);
         }
-        return new OrderResource($order);
+        return new BookingResource($order);
     }
 }

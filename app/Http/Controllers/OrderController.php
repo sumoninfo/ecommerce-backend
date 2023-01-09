@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Helpers\Helper;
 use App\Http\Requests\OrderRequest;
-use App\Http\Resources\OrderResource;
+use App\Http\Resources\BookingResource;
 use App\Models\Delivery;
 use App\Models\Order;
 use App\Services\OrderService;
@@ -21,7 +21,7 @@ class OrderController extends Controller
     public function index(Request $request)
     {
         $orders = (new OrderService())->getOrdersWithSearchAndFilter($request, 'user');
-        return OrderResource::collection($orders);
+        return BookingResource::collection($orders);
     }
 
     /**
@@ -32,7 +32,7 @@ class OrderController extends Controller
     public function deliveredOrders(Request $request)
     {
         $orders = (new OrderService())->getDeliveredOrdersWithSearchAndFilter($request, 'user');
-        return OrderResource::collection($orders);
+        return BookingResource::collection($orders);
     }
 
     /**
@@ -57,7 +57,7 @@ class OrderController extends Controller
      * Display the specified resource.
      *
      * @param \App\Models\Order $order
-     * @return OrderResource
+     * @return BookingResource
      */
     public function show($id, Request $request)
     {
@@ -65,7 +65,7 @@ class OrderController extends Controller
         if ($request->type == 'delivered'){
             $order = Delivery::find($id);
         }
-        return new OrderResource($order->where('user_id', auth()->id())->first());
+        return new BookingResource($order->where('user_id', auth()->id())->first());
     }
 
     /**
